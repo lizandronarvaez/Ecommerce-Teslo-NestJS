@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+#base de datos
+  database:
+    image: postgres:14.3
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DATABASE}
+    container_name: teslo_database
+    volumes:
+      - ./postgresDB:/var/lib/postgresql/data
+
+# administrador base de datos postgres
+  admin_pgAdmin:
+
+    depends_on:
+      - database
+    image: dpage/pgadmin4
+    ports:
+      - 8080:80
+    volumes:
+      - ./pgadmin:/var/lib/pgadmin
+    user: root
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
+      
+  
