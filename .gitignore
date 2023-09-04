@@ -4,6 +4,8 @@
 /postgresDB
 /pgadmin
 .env
+/static
+/public
 # Logs
 logs
 *.log
