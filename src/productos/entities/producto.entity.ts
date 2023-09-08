@@ -3,10 +3,12 @@ import {
   BeforeUpdate,
   Column,
   Entity,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { ProductoImage } from './productoImage.entity';
+import { Users } from 'src/auth/entities/users.entity';
 
 /**Las entidades es la forma en la que la base de datos se va a formar o como vamos a querer que luzca */
 @Entity({ name: 'productos' })
@@ -45,6 +47,11 @@ export class Producto {
   })
   images?: ProductoImage[];
 
+  @ManyToOne(() => Users, (users) => users.productos, {
+    // Carga las relaciones en la tabla
+    eager: true,
+  })
+  user: Users;
   // Metodos antes de insertar
   @BeforeInsert()
   checkSlugInsert() {
