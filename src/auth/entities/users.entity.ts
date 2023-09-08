@@ -1,9 +1,11 @@
 import * as bcrypt from 'bcrypt';
+import { Producto } from 'src/productos/entities';
 import {
   BeforeInsert,
   BeforeUpdate,
   Column,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -27,6 +29,8 @@ export class Users {
   @Column({ type: 'text', array: true, default: ['user'] })
   roles: string[];
 
+  @OneToMany(() => Producto, (producto) => producto.user)
+  productos: Producto;
   // Comprobar que los datos se graban en minisculas
   @BeforeInsert()
   checkFieldsBeforeInsert() {

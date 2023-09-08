@@ -47,6 +47,7 @@ export class AuthService {
       select: {
         email: true,
         password: true,
+        fullName: true,
         id: true,
       },
     });
@@ -67,7 +68,31 @@ export class AuthService {
       token,
     };
   }
-
+  // Metodo para comprobar el usuario a traves del token
+  async checkStatus(authorization: string) {
+    // Extraigo el token
+    const token = authorization.split(' ')[1];
+    // Descrifo el token
+    const { id } = this.jwtService.verify(token);
+    // Buscar el usuario con ese id
+    const user = await this.userRepository.findOne({
+      where: { id },
+      select: {
+        id: true,
+        fullName: true,
+        email: true,
+        password: true,
+      },
+    });
+    // Generamos el nuevo token
+    const newToken = this.generateTokenJwt({ id: user.id });
+    delete user.id;
+    // Retorno el token
+    return {
+      ...user,
+      newToken,
+    };
+  }
   // Generar el token
   private generateTokenJwt(payload: JwtPayload) {
     const token = this.jwtService.sign(payload);

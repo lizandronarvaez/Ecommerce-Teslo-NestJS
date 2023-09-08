@@ -21,7 +21,7 @@ import { JwtStrategy } from './strategy/jwt.strategy';
         return {
           secret: process.env.SECRET_KEY,
           signOptions: {
-            expiresIn: '1d',
+            expiresIn: '1h',
           },
         };
       },

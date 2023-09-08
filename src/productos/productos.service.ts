@@ -13,6 +13,7 @@ import { DataSource, Repository } from 'typeorm';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { validate as uuidIsValidate } from 'uuid';
 import { Producto, ProductoImage } from './entities';
+import { Users } from 'src/auth/entities/users.entity';
 @Injectable()
 export class ProductosService {
   // Busca los errores y muestra el error no todo el log de informacion
@@ -26,8 +27,9 @@ export class ProductosService {
 
     private readonly dataSource: DataSource,
   ) {}
-  async create(createProductoDto: CreateProductoDto) {
+  async create(createProductoDto: CreateProductoDto, user: Users) {
     createProductoDto.title = createProductoDto.title.toLowerCase().trim();
+
     try {
       // extrae las imagenes y demas propiedades al crear el producto
       const { images = [], ...productoDetails } = createProductoDto;
@@ -39,6 +41,7 @@ export class ProductosService {
         images: images.map((image) =>
           this.productoImageRepository.create({ url: image }),
         ),
+        user,
       });
       // Guarda los datos del producto enviados desde el body en la base de datos
       await this.productoRepository.save(product);
@@ -99,7 +102,7 @@ export class ProductosService {
       images: images.map((image) => image.url),
     };
   }
-  async update(id: string, updateProductoDto: UpdateProductoDto) {
+  async update(id: string, updateProductoDto: UpdateProductoDto, user) {
     // Extaemos los productos de el body
     const { images, ...restUpdate } = updateProductoDto;
     // Creamos un objecto de los datos a actualizar
@@ -128,7 +131,7 @@ export class ProductosService {
           this.productoImageRepository.create({ url: img }),
         );
       }
-
+      producto.user = user;
       await queryRunner.manager.save(producto);
       await queryRunner.commitTransaction();
       await queryRunner.release();
