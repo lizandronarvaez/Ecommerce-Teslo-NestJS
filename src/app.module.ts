@@ -8,6 +8,7 @@ import { FilesModule } from './files/files.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { AuthModule } from './auth/auth.module';
+import { WebSocketMessagesModule } from './web-socket-messages/web-socket-messages.module';
 
 @Module({
   imports: [
@@ -15,13 +16,18 @@ import { AuthModule } from './auth/auth.module';
       isGlobal: true,
     }),
     TypeOrmModule.forRoot({
+      ssl: process.env.STAGE === 'prod' ? true : false,
+      extra: {
+        ssl:
+          process.env.STAGE === 'prod' ? { rejectUnauthorized: false } : null,
+      },
       type: 'postgres',
       host: process.env.DB_HOST,
       /*Acordarse siempre de poner el + por delante
        Significa que es un numero y no un string*/
       port: +process.env.DB_PORT,
       database: process.env.POSTGRES_DATABASE,
-      username: process.env.DB_USERNAME,
+      username: process.env.POSTGRES_USERNAME,
       password: process.env.POSTGRES_PASSWORD,
       autoLoadEntities: true,
       retryDelay: 3000,
@@ -41,6 +47,8 @@ import { AuthModule } from './auth/auth.module';
     FilesModule,
 
     AuthModule,
+
+    WebSocketMessagesModule,
   ],
   controllers: [],
   providers: [],
