@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import * as bcrypt from 'bcrypt';
 import { Producto } from 'src/productos/entities';
 import {
@@ -11,21 +12,42 @@ import {
 
 @Entity({ name: 'users' })
 export class Users {
+  @ApiProperty({
+    example: 'e27545de-88b8-4dee-b729-4d8a143f99aa',
+  })
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @ApiProperty({
+    example: 'lizandro narvaez',
+  })
   @Column({ type: 'text', unique: true })
   fullName: string;
 
+  @ApiProperty({
+    example: 'lizandrojesus13@hotmail.com',
+  })
   @Column({ type: 'text', unique: true })
   email: string;
 
+  @ApiProperty({
+    example: '$2b$10$6LilGqajKwyKFofr0cODXeq1957NcYXyR/4SNfpa4qP3hj8EfIT9S',
+  })
   @Column({ type: 'text', select: false })
   password: string;
 
+  @ApiProperty({
+    example: true,
+    required: false,
+  })
   @Column({ type: 'bool', default: true })
   isActive: boolean;
 
+  @ApiProperty({
+    example: ['user'],
+    required: false,
+    default: ['user'],
+  })
   @Column({ type: 'text', array: true, default: ['user'] })
   roles: string[];
 

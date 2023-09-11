@@ -12,7 +12,9 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { editFileName, filterFile } from './helpers';
 import { Response } from 'express';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Productos_Images')
 @Controller('files')
 export class FilesController {
   constructor(private readonly filesService: FilesService) {}
